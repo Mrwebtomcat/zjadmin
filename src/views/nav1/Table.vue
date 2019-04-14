@@ -94,7 +94,36 @@
 						</el-form-item>
 					</div>
 				</div>	
-				
+				<div class="flex">
+					<div >
+						<el-form-item label="是否实名">
+							<el-radio-group v-model="editForm.sm">
+								<el-radio class="radio" :label="1">是</el-radio>
+								<el-radio class="radio" :label="0">否</el-radio>
+							</el-radio-group>
+						</el-form-item>
+					</div>
+					<el-form-item label="是否吸烟">
+						<el-radio-group v-model="editForm.xy">
+							<el-radio class="radio" :label="1">是</el-radio>
+							<el-radio class="radio" :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="是否喝酒">
+						<el-radio-group v-model="editForm.hej">
+							<el-radio class="radio" :label="1">是</el-radio>
+							<el-radio class="radio" :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<!-- <div class="r1">
+						<el-form-item label="生日">
+							<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
+						</el-form-item>
+					</div> -->
+				</div>	
+				<el-form-item label="择偶条件">
+					<el-input type="textarea" value="广东 | 湛江 | 麻章区 | 18-20岁 | 女性 | 医生职业 | 薪资3000~5000元左右 | 有房 | 1年内结婚 | 婚后需要能生小孩 | 要有房子还是和家人居住" ></el-input>
+				</el-form-item>
 				
 				<el-form-item label="地址">
 					<el-input type="textarea" v-model="editForm.addr"></el-input>
