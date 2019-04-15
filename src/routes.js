@@ -7,6 +7,7 @@ import Form from './views/nav1/Form.vue'
 import Message from './views/nav1/Message.vue'
 import user from './views/nav1/user.vue'
 import SetVip from './views/nav1/VipSetMoney.vue'
+import Examine from './views/nav1/examine.vue'
 import SetStart from './views/nav1/StartSet.vue'
 import Page4 from './views/nav2/Page4.vue'
 import Page5 from './views/nav2/Page5.vue'
@@ -35,6 +36,7 @@ let routes = [
         children: [
             { path: '/main', component: Main, name: '会员管理', hidden: true },
             { path: '/table', component: Table, name: '会员查询' },
+            { path: '/examine', component: Examine, name: '实名审核' },
             { path: '/form', component: Form, name: '会员活动推送' },
             { path: '/message', component: Message, name: '会员消息推送' },
             { path: '/user', component: user, name: '会员充值流水' },
