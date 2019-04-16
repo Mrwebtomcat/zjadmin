@@ -112,12 +112,15 @@
 				<!-- <el-form-item label="择偶条件">
 					<el-input type="textarea" value="广东 | 湛江 | 麻章区 | 18-20岁 | 女性 | 医生职业 | 薪资3000~5000元左右 | 有房 | 1年内结婚 | 婚后需要能生小孩 | 要有房子还是和家人居住" ></el-input>
 				</el-form-item> -->
+				<div class="flex">
+					<el-form-item label="地址:">
+						<!-- <el-input type="textarea" v-model="editForm.addr"></el-input> -->
+						<div>广东  湛江  麻章区 </div>
+					</el-form-item>
+					 <el-input v-model="editForm.yuanyin" v-if="editForm.sm!='是'||editForm.sm!=1" value=""  placeholder="请输入原因"></el-input>
+				</div>
 				
-				<el-form-item label="地址:">
-					<!-- <el-input type="textarea" v-model="editForm.addr"></el-input> -->
-					<div>广东  湛江  麻章区 </div>
-				</el-form-item>
-				<div class="flex" style="height:35px;">
+				<div class="flex" style="height:35px;" v-if="editForm.sm=='是'||editForm.sm==1>
 					<div >
 						<el-form-item label="是否赠送">
 							<el-switch
