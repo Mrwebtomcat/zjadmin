@@ -1,4 +1,4 @@
-<!-- 红娘信息管理 -->
+<!-- 店铺信息管理 -->
 <template>
 	<section>
 		<!--工具条-->
@@ -14,15 +14,15 @@
 		<el-table :data="Vipdata" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column prop="id" label="#" width="80"  sortable>
 			</el-table-column>
-			<el-table-column prop="vc_name" label="红娘昵称" width="80" sortable>
+			<el-table-column prop="vc_shopname" label="店铺昵称" width="120" sortable>
 			</el-table-column>
-			<el-table-column prop="vc_phone" label="联系方式" width="130"  sortable>
+			<el-table-column prop="vc_shopdesc" label="店铺描述"  sortable>
 			</el-table-column>
-			<el-table-column prop="vc_content" label="红娘个人描述"  sortable>
+			<el-table-column prop="vc_shopcity" label="店铺地址"  sortable>
 			</el-table-column>
-			<el-table-column  label="红娘照片"  sortable>
+			<el-table-column  label="店铺照片"  sortable>
 					<template slot-scope="scope">
-						<img :src="scope.row.vc_img" style="width: 80%;border-radius: 10%;margin: 15px 0 10px;" alt="">
+						<img :src="scope.row.vc_shopimg" style="width: 80%;border-radius: 10%;margin: 15px 0 10px;" alt="">
 					</template>
 			</el-table-column>	
 			<el-table-column label="操作" width="230">
@@ -43,16 +43,22 @@
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
 			<el-form :model="editForm" label-width="150px" :rules="addFormRules" ref="editForm">
-				<el-form-item label="红娘昵称" prop="n_time">
-					<el-input v-model="editForm.vc_name" auto-complete="off"></el-input>
+				<el-form-item label="店铺昵称" >
+					<el-input v-model="editForm.vc_shopname" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="红娘联系方式" prop="vc_daymoney">
-					<el-input v-model="editForm.vc_phone"></el-input>
+				<el-form-item label="店铺描述" >
+					<el-input v-model="editForm.vc_shopdesc"></el-input>
 				</el-form-item>
-				<el-form-item label="红娘个人描述" prop="n_sex">
-					<el-input v-model="editForm.vc_content"></el-input>
+				<el-form-item label="店铺地址" >
+					<el-input v-model="editForm.vc_shopcity"></el-input>
 				</el-form-item>
-				<el-form-item label="红娘照片" prop="vc_img">
+				<el-form-item label="店铺经度" >
+					<el-input v-model="editForm.vc_longitude"></el-input>
+				</el-form-item>
+				<el-form-item label="店铺纬度" >
+					<el-input v-model="editForm.vc_latitude"></el-input>
+				</el-form-item>
+				<el-form-item label="店铺照片" prop="vc_shopimg">
 					<el-upload
 					  class="avatar-uploader"
 					  action=""
@@ -74,18 +80,24 @@
 		<!--新增界面-->
 		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="addForm" label-width="150px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="红娘昵称" prop="n_time">
-					<el-input v-model="addForm.vc_name" auto-complete="off"></el-input>
+				<el-form-item label="店铺昵称" >
+					<el-input v-model="addForm.vc_shopname" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="红娘联系方式" prop="vc_daymoney">
-					<el-input v-model="addForm.vc_phone"></el-input>
+				<el-form-item label="店铺描述" >
+					<el-input v-model="addForm.vc_shopdesc"></el-input>
 				</el-form-item>
-				<el-form-item label="红娘个人描述" prop="n_sex">
-					<el-input v-model="addForm.vc_content"></el-input>
+				<el-form-item label="店铺地址" >
+					<el-input v-model="addForm.vc_shopcity"></el-input>
 				</el-form-item>
-				<el-form-item label="红娘照片" prop="vc_img">
+				<el-form-item label="店铺经度" >
+					<el-input v-model="addForm.vc_longitude"></el-input>
+				</el-form-item>
+				<el-form-item label="店铺纬度" >
+					<el-input v-model="addForm.vc_latitude"></el-input>
+				</el-form-item>
+				
+				<el-form-item label="店铺照片" prop="vc_shopimg">
 					<el-upload
-						ref="shangchuang"
 					  class="avatar-uploader"
 					  action=""
 					  :http-request="myuphongn"
@@ -142,14 +154,20 @@
 				addFormVisible: false,//新增界面是否显示
 				addLoading: false,
 				addFormRules: {
-					vc_name: [
-						{ required: true, message: '请填写红娘名称', trigger: 'blur' }
+					vc_shopname: [
+						{ required: true, message: '请填写店铺名称', trigger: 'blur' }
 					],
-					vc_phone: [
-						{ required: true, message: '请填写红娘联系方式', trigger: 'blur' }
+					vc_shopcity: [
+						{ required: true, message: '请填写店铺地址', trigger: 'blur' }
 					],
-					vc_content: [
-						{ required: true, message: '请填写红娘描述', trigger: 'blur' }
+					vc_shopdesc: [
+						{ required: true, message: '请填写店铺描述', trigger: 'blur' }
+					],
+					vc_longitude: [
+						{ required: true, message: '请填写店铺经度', trigger: 'blur' }
+					],
+					vc_latitude: [
+						{ required: true, message: '请填写店铺纬度', trigger: 'blur' }
 					]
 					
 				},
@@ -189,9 +207,9 @@
 					//NProgress.done();
 				});
 			},
-			getVipList() {
+			getListData() {
 				//NProgress.start();
-				connetAction.ajaxPost(httpUrl['getHNinfo'],"")
+				connetAction.ajaxPost(httpUrl['getShopInfo'],"")
 				.then((res)=>{
 					console.log(res)
 						//this.editForm = res.data
@@ -209,8 +227,8 @@
 				}).then(() => {
 					this.listLoading = true;
 					//NProgress.start();
-					let para = { id: row.id,vc_img:row.vc_img};
-					connetAction.ajaxPost(httpUrl['delHNAlbum'],para)
+					let para = { id: row.id,vc_shopimg:row.vc_shopimg};
+					connetAction.ajaxPost(httpUrl['delShopAlbum'],para)
 					.then((res)=>{
 						console.log(res)
 							// this.Vipdata = res.data;
@@ -219,7 +237,7 @@
 								message: '删除成功',
 								type: 'success'
 							});
-							this.getVipList();
+							this.getListData();
 					})
 					.catch((res)=>{
 						
@@ -232,15 +250,9 @@
 			//显示编辑界面
 			handleEdit: function (index, row) {
 				this.editFormVisible = true;
-				this.editForm = row;
-				this.imageUrl = this.editForm.vc_img;
-				this.produceImg(row.vc_img);
-				// .then((base64)=>{
-				// 	this.imageUrl = base64
-				// },(err)=>{
-				// 	console.log("网络资源转换失败")
-				// })
-				// this.myuphongn(this.$refs.shangchuang)
+				this.editForm = Object.assign({}, row);
+				this.imageUrl = this.editForm.vc_shopimg;
+				console.log(this.editForm)
 			},
 			//显示新增界面
 			handleAdd: function () {
@@ -254,18 +266,18 @@
 					if (valid) {
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
 							let para = this.editForm;
-							para.vc_img = this.imageUrl;
+							para.vc_shopimg = this.imageUrl;
 							this.editLoading = true;
-							connetAction.ajaxPost(httpUrl['updateHNinfo'],para)
+							connetAction.ajaxPost(httpUrl['updateShopInfo'],para)
 							.then((res)=>{
 									this.editLoading = false;
 									this.$message({
-										message: '红娘资料更新成功',
+										message: '店铺资料更新成功',
 										type: 'success'
 									});
 									this.$refs['editForm'].resetFields();
 									this.editFormVisible = false;
-									this.getVipList();
+									this.getListData();
 							})
 							.catch((res)=>{
 								
@@ -278,20 +290,20 @@
 			//新增
 			addSubmit: function () {
 				let param = this.addForm;
-				param.vc_img = this.imageUrl;
+				param.vc_shopimg = this.imageUrl;
 				this.$refs.addForm.validate((valid) => {
 					if (valid) {
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
 							
 							this.addLoading = true;
-							connetAction.ajaxPost(httpUrl['addHNinfo'],param)
+							connetAction.ajaxPost(httpUrl['addShopInfo'],param)
 							.then((res)=>{
 								console.log(res)
 									//this.editForm = res.data
 									this.Vipdata = res.data;
 									this.listLoading = false;
 									this.addFormVisible = false;
-									this.getVipList();
+									this.getListData();
 							})
 							.catch((res)=>{
 								
@@ -305,8 +317,9 @@
 			},
 			myuphongn:function(file){
 				this.getBase64(file.file).then(res=>{
-					this.imageUrl = res;
+					this.imageUrl = res
 				})
+				
 			},
 			getBase64(file) {
 			  return new Promise(function(resolve, reject) {
@@ -323,29 +336,6 @@
 				  resolve(imgResult);
 				};
 			  });
-			},
-			produceImg:function(url){
-				 function getBase64Image(img,width,height) {//width、height调用时传入具体像素值，控制大小 ,不传则默认图像大小
-				  var canvas = document.createElement("canvas");
-				  canvas.width = width ? width : img.width;
-				  canvas.height = height ? height : img.height;
-		 
-				  var ctx = canvas.getContext("2d");
-				  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-				  var dataURL = canvas.toDataURL();
-				  return dataURL;
-				}
-				var image = new Image();
-				image.crossOrigin = 'anonymous';
-				image.src = url+'?time=' + new Date().valueOf();
-				// var deferred=$.Deferred();
-				if(url){
-				  image.onload =function (){
-					this.imageUrl = getBase64Image(image);//将base64传给done上传处理
-				  }
-				 // return deferred.promise();//问题要让onload完成后再return sessionStorage['imgTest']
-				}
-				
 			},
 			handleAvatarSuccess(res, file) {
 				this.imageUrl = URL.createObjectURL(file.raw);
@@ -364,7 +354,7 @@
 			 }
 		},
 		mounted() {
-			this.getVipList();
+			this.getListData();
 			this.reader = new FileReader();
 		}
 	}

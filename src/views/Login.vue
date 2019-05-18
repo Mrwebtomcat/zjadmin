@@ -18,15 +18,16 @@
 </template>
 
 <script>
-  import { requestLogin } from '../api/api';
+  import { connetAction,httpUrl,ajaxPost} from '../api/api';
+	
   //import NProgress from 'nprogress'
   export default {
     data() {
       return {
         logining: false,
         ruleForm2: {
-          account: 'admin',
-          checkPass: '123456'
+          account: '',
+          checkPass: ''
         },
         rules2: {
           account: [
@@ -38,9 +39,10 @@
             //{ validator: validaePass2 }
           ]
         },
-        checked: true
+        checked: false
       };
     },
+	
     methods: {
       handleReset2() {
         this.$refs.ruleForm2.resetFields();
@@ -52,19 +54,19 @@
             //_this.$router.replace('/table');
             this.logining = true;
             //NProgress.start();
-            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
-            requestLogin(loginParams).then(data => {
+            var loginParams = {vc_username: this.ruleForm2.account,vc_password: this.ruleForm2.checkPass};
+           connetAction.ajaxPost(httpUrl['login'],loginParams).then(data => {
               this.logining = false;
               //NProgress.done();
-              let { msg, code, user } = data;
-              if (code !== 200) {
+              let { message, status} = data;
+              if (status != 1) {
                 this.$message({
-                  message: msg,
+                  message: message,
                   type: 'error'
                 });
               } else {
-                sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({ path: '/table' });
+                sessionStorage.setItem('user',status);
+                this.$router.push({ path: '/userlist' });
               }
             });
           } else {

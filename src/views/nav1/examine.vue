@@ -21,19 +21,19 @@
 			</el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
-			<el-table-column prop="name" label="姓名" width="120" sortable>
+			<el-table-column prop="vc_username" label="姓名" width="120" sortable>
 			</el-table-column>
-			<el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
+			<el-table-column prop="n_sex" label="性别" width="100" :formatter="formatSex" sortable>
 			</el-table-column>
-			<el-table-column prop="age" label="年龄" width="100" sortable>
+			<el-table-column prop="n_age" label="年龄" width="100" sortable>
 			</el-table-column>
 			<el-table-column prop="birth" label="生日" width="120" sortable>
 			</el-table-column>
-			<el-table-column prop="addr" label="身份证号码" min-width="180" sortable>
+			<el-table-column prop="n_sfzh" label="身份证号码" min-width="180" sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="230">
-				<template scope="scope">
-					<el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+				<template slot-scope="scope">
+					<!-- <el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)">查看</el-button> -->
 					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
 					<!-- <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button> -->
 				</template>
@@ -52,39 +52,32 @@
 			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
 				<div class="flex">
 					 <div class="l1">
-						<el-form-item label="姓名:"  prop="name">
-							<span>阎娜</span>
-							<!-- <el-input v-model="editForm.name" auto-complete="off"></el-input> -->
+						<el-form-item label="姓名:"  prop="vc_username">
+							<span>{{editForm.vc_username}}</span>
+						</el-form-item> 
+						<el-form-item label="性别:"  prop="vc_username">
+							<div>
+								{{editForm.n_sex?'男':'女'}}
+							</div>
 						</el-form-item> 
 					 </div>
 					 <div class="r1" style="width:30%;">
 						<el-form-item label="年龄:">
-							<span>18岁</span>
-							<!-- <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number> -->
+							<span>{{editForm.n_age}}岁</span>
 						</el-form-item>
 					 </div>
 				</div>
 				<div class="flex">
-					 <!-- <div class="l1">
-						 <el-form-item label="职业">
-						 	<el-radio-group v-model="editForm.sex">
-						 		<el-input v-model="editForm.name" auto-complete="off"></el-input>
-						 	</el-radio-group>
-						 </el-form-item> 
-						
-					 </div> -->
 					 <div class="l1">
 						<el-form-item label="证件号码:">
-							<div>440802292929282812</div>
-							<!-- <el-radio-group v-model="editForm.sex"> -->
-								<!-- <el-input value="440802292929282812" auto-complete="off"></el-input> -->
-							<!-- </el-radio-group> -->
+							<span style="display: inline-block;width: 100%;">
+								{{editForm.n_sfzh}}
+							</span>
 						</el-form-item>
 					 </div>
 					 <div class="r1">
 						<el-form-item label="生日:">
-							<!-- <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker> -->
-							<div>1978-03-19</div>
+							<div>{{editForm.dt_csrq}}</div>
 						</el-form-item>
 						
 					 </div>
@@ -92,16 +85,114 @@
 				<div class="flex">
 					<div class="l1">
 						<el-form-item label="职业:">
-							<div>工人</div>
+							<div>
+								未知
+							</div>
+						</el-form-item>
+					</div>
+					<div class="r1">
+						<el-form-item label="是否实名:">
+							<el-radio-group v-model="editForm.n_issm"  @change="slecyesno">
+								<el-radio class="radio" :label="1" value="1">是</el-radio>
+								<el-radio class="radio" :label="0" value="0">否</el-radio>
+							</el-radio-group>
+						</el-form-item>
+						
+					</div>
+				</div>	
+				<div class="flex">
+					<el-form-item label="地址:">
+						<div>{{editForm.vc_city}}{{editForm.vc_area}}</div>
+					</el-form-item>
+				</div>
+				<div  v-if="!editForm.n_issm">
+					<el-form-item label="不通过原因:" label-width="100px" style="transform: translateX(-20px);">
+						<el-input v-model="editForm.vc_nosm"  value=""  placeholder="请输入原因"></el-input>
+					</el-form-item>
+				</div>
+			<div>
+				
+			</div>
+				
+				<div class="flex" style="height:35px;" v-if="editForm.n_issm=='是'||editForm.n_issm==1">
+					<div>
+						<el-form-item label="是否赠送">
+							<el-switch
+							v-model="value2"
+							active-color="#13ce66"
+							inactive-color="#ff4949">
+							</el-switch>
+						</el-form-item>
+					</div>
+				</div>	
+				<div v-show="value2">
+						 <el-radio-group v-model="radio2">
+								<el-radio v-for="(item,index) in hylist" :key="index" :label="item.id" :value="item.id">{{vipNotice(item)}}</el-radio>
+						</el-radio-group>
+				</div>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click.native="editFormVisible = false">取消</el-button>
+				<el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
+		<el-dialog title="查看" v-model="editFormshow" :close-on-click-modal="false">
+			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+				<div class="flex">
+					 <div class="l1">
+						<el-form-item label="姓名:"  prop="vc_username">
+							<!-- <span>阎娜</span> -->
+							<el-input v-model="editForm.vc_username"></el-input>
+						</el-form-item> 
+						<el-form-item label="性别:"  prop="vc_username">
+							<!-- <span>阎娜</span> -->
+							<!-- <el-input :value="editForm.n_sex?'男':'女'"></el-input> -->
+							<div>
+								{{editForm.n_sex?'男':'女'}}
+							</div>
+						</el-form-item> 
+					 </div>
+					 <div class="r1" style="width:30%;">
+						<el-form-item label="年龄:">
+							<span>{{editForm.n_age}}岁</span>
+							<!-- <el-input-number v-model="editForm.n_age" :min="0" :max="200"></el-input-number> -->
+						</el-form-item>
+					 </div>
+				</div>
+				<div class="flex">
+					 <div class="l1">
+						<el-form-item label="证件号码:">
+							<span style="display: inline-block;width: 100%;">
+								<!-- <el-input :value="editForm.n_sfzh"></el-input> -->
+								{{editForm.n_sfzh}}
+							</span>
+						</el-form-item>
+					 </div>
+					 <div class="r1">
+						<el-form-item label="生日:">
+							<!-- <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker> -->
+							<div>{{editForm.dt_csrq}}</div>
+						</el-form-item>
+						
+					 </div>
+				</div>
+				<div class="flex">
+					<div class="l1">
+						<el-form-item label="职业:">
+							<div>
+								<!-- {{editForm.vc_worke}} -->
+								未知
+							</div>
 							<!-- <el-input value="440802292929282812" auto-complete="off"></el-input> -->
 							<!-- <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number> -->
 						</el-form-item>
 					</div>
 					<div class="r1">
 						<el-form-item label="是否实名:">
-							<el-radio-group v-model="editForm.sm">
-								<el-radio class="radio" :label="1">是</el-radio>
-								<el-radio class="radio" :label="0">否</el-radio>
+							<el-radio-group v-model="editForm.n_issm">
+								<el-radio class="radio" :label="1" value="1">是</el-radio>
+								<el-radio class="radio" :label="0" value="0">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						
@@ -114,30 +205,33 @@
 				</el-form-item> -->
 				<div class="flex">
 					<el-form-item label="地址:">
-						<!-- <el-input type="textarea" v-model="editForm.addr"></el-input> -->
-						<div>广东  湛江  麻章区 </div>
+						<!-- <el-input type="text" v-model="editForm.adress"></el-input> -->
+						<div>{{editForm.vc_city}}{{editForm.vc_area}}</div>
 					</el-form-item>
-					 <el-input v-model="editForm.yuanyin" v-if="editForm.sm!='是'||editForm.sm!=1" value=""  placeholder="请输入原因"></el-input>
 				</div>
+				<div  v-if="!editForm.n_issm">
+					<el-form-item label="不通过原因:" label-width="100px" style="transform: translateX(-20px);">
+						<el-input v-model="editForm.yuanyin"  value=""  placeholder="请输入原因"></el-input>
+					</el-form-item>
+				</div>
+			<div>
 				
-				<div class="flex" style="height:35px;" v-if="editForm.sm=='是'||editForm.sm==1>
-					<div >
+			</div>
+				
+				<div class="flex" style="height:35px;" v-if="editForm.n_issm=='是'||editForm.n_issm==1">
+					<div>
 						<el-form-item label="是否赠送">
 							<el-switch
-							v-model="value2"
+							v-model="editForm.n_isvip"
 							active-color="#13ce66"
 							inactive-color="#ff4949">
 							</el-switch>
 						</el-form-item>
 					</div>
 				</div>	
-				<div v-show="value2">
-						 <el-radio-group v-model="radio2">
-								<el-radio :label="3">赠送会员一个月</el-radio>
-								<el-radio :label="6">赠送会员三个月</el-radio>
-								<el-radio :label="9">赠送会员四个月</el-radio>
-								<el-radio :label="12">赠送星级</el-radio>
-								<el-radio :label="15">赠送特权</el-radio>
+				<div v-show="editForm.n_isvip">
+						 <el-radio-group v-model="editForm.vipid">
+								<el-radio v-for="(item,index) in hylist" :key="index" :label="item.id">{{vipNotice(item)}}</el-radio>
 						</el-radio-group>
 					</div>
 			</el-form>
@@ -147,40 +241,14 @@
 			</div>
 		</el-dialog>
 
-		<!--新增界面-->
-		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="姓名" prop="name">
-					<el-input v-model="addForm.name" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="性别">
-					<el-radio-group v-model="addForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="年龄">
-					<el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
-				</el-form-item>
-				<el-form-item label="生日">
-					<el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="地址">
-					<el-input type="textarea" v-model="addForm.addr"></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
-			</div>
-		</el-dialog>
+		
 	</section>
 </template>
 
 <script>
 	import util from '../../common/js/util'
 	//import NProgress from 'nprogress'
-	import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser } from '../../api/api';
+	import {httpUrl, connetAction} from '../../api/api';
 
 	export default {
 		data() {
@@ -188,32 +256,36 @@
 				filters: {
 					name: ''
 				},
-				radio2:false,
+				adress:"",
+				radio2:0,
 				value2:false,
 				users: [],
 				total: 0,
 				page: 1,
+				hylist:[],
 				listLoading: false,
 				sels: [],//列表选中列
-
 				editFormVisible: false,//编辑界面是否显示
 				editLoading: false,
 				editFormRules: {
-					name: [
+					vc_username: [
 						{ required: true, message: '请输入姓名', trigger: 'blur' }
 					]
 				},
 				//编辑界面数据
 				editForm: {
-					id: 0,
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
+					id: 1,
+					n_age: 19,
+					n_issm:0,
+					n_sex: 1,
+					n_sfzh: 0,
+					vc_area: "坡头区",
+					vc_city: "湛江",
+					vc_province: "广东"
 				},
 
 				addFormVisible: false,//新增界面是否显示
+				editFormshow: false,//查看界面是否显示
 				addLoading: false,
 				addFormRules: {
 					name: [
@@ -234,7 +306,8 @@
 		methods: {
 			//性别显示转换
 			formatSex: function (row, column) {
-				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
+				row.n_issm = 0;
+				return row.n_sex == 1 ? '男' :'女';
 			},
 			handleCurrentChange(val) {
 				this.page = val;
@@ -244,14 +317,49 @@
 			getUsers() {
 				let para = {
 					page: this.page,
-					name: this.filters.name
+					// pageNum: this.filters.name
+					pageNum:20
+				};
+				this.listLoading = true;
+				let  that = this;
+				connetAction.ajaxPost(httpUrl['showDsh'],para)
+				.then((res)=>{
+					console.log(res)
+						this.users = res.data
+						this.listLoading = false;
+				})
+				.catch((res)=>{
+					
+				})
+			},
+			slecyesno:function(e){
+				this.editForm.n_issm = e
+			},
+			vipNotice:function(data){
+				var str = '';
+				if(data.n_time==1){
+					str ="赠送会员一个月，原价"+data['n_money']+'元';
+				}else if(data.n_time==6){
+					str ="赠送会员六个月，原价"+data['n_money']+'元';
+				}else if(data.n_time==12){
+					str ="赠送会员一年，原价"+data['n_money']+'元';
+				}
+				if(data.n_type==3){
+					str+="享受特权礼仪设计，美容纹眉毛,到店学习礼仪等特权"
+				}
+				return str;
+			},
+			nvIndex() {
+				let para = {
+					page: this.page,
+					// pageNum: this.filters.name
+					pageNum:20
 				};
 				this.listLoading = true;
 				//NProgress.start();
-				getUserListPage(para).then((res) => {
-					this.total = res.data.total;
-					this.users = res.data.users;
+				connetAction.ajaxPost(httpUrl['nvIndex'],{type:1}).then((res) => {
 					this.listLoading = false;
+					this.hylist = res.data;
 					//NProgress.done();
 				});
 			},
@@ -280,6 +388,7 @@
 			handleEdit: function (index, row) {
 				this.editFormVisible = true;
 				this.editForm = Object.assign({}, row);
+				this.adress = this.editForm.vc_province +  this.editForm.vc_city +this.editForm.vc_area
 			},
 			//显示新增界面
 			handleAdd: function () {
@@ -294,52 +403,43 @@
 			},
 			//编辑
 			editSubmit: function () {
-				this.$refs.editForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗？', '提示', {}).then(() => {
-							this.editLoading = true;
-							//NProgress.start();
-							let para = Object.assign({}, this.editForm);
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							editUser(para).then((res) => {
-								this.editLoading = false;
-								//NProgress.done();
-								this.$message({
-									message: '提交成功',
-									type: 'success'
-								});
-								this.$refs['editForm'].resetFields();
-								this.editFormVisible = false;
-								this.getUsers();
-							});
-						});
+				let param = {
+					oc_usercode:this.editForm.id,
+					n_issm:this.editForm.n_issm,
+					vipid:this.radio2?this.radio2:0,
+					vc_nosm:this.editForm.yuanyin
+				}
+				if(!param.n_issm){
+					if(param.vc_nosm==""){
+						this.$message({message: '请填写不通过原因'});
+						return false;
 					}
-				});
-			},
-			//新增
-			addSubmit: function () {
-				this.$refs.addForm.validate((valid) => {
-					if (valid) {
+				}else{
+					this.vc_nosm = "";
+					param.vc_nosm = "";
+					param.n_issm = 2;
+				}
+				this.$refs.editForm.validate((valid) => {
+					// if (valid) {
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
 							this.addLoading = true;
 							//NProgress.start();
-							let para = Object.assign({}, this.addForm);
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							addUser(para).then((res) => {
-								this.addLoading = false;
-								//NProgress.done();
-								this.$message({
-									message: '提交成功',
-									type: 'success'
+								connetAction.ajaxPost(httpUrl['updateSmType'],param).then((res) => {
+										this.addLoading = false;
+										this.$message({
+											message: '提交成功',
+											type: 'success'
+										});
+										this.$refs['editForm'].resetFields();
+										this.editFormVisible = false;
+										this.getUsers();
 								});
-								this.$refs['addForm'].resetFields();
-								this.addFormVisible = false;
-								this.getUsers();
-							});
+								
 						});
-					}
+					// }
 				});
 			},
+			
 			selsChange: function (sels) {
 				this.sels = sels;
 			},
@@ -366,8 +466,12 @@
 				});
 			}
 		},
-		mounted() {
+		created(){
 			this.getUsers();
+			this.nvIndex()
+		},
+		mounted() {
+			
 		}
 	}
 

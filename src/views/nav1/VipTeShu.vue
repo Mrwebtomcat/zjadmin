@@ -1,4 +1,3 @@
-<!-- 星级配置 -->
 <template>
 	<section>
 		<!--工具条-->
@@ -9,17 +8,19 @@
 				</el-form-item>
 			</el-form>
 		</el-col>
-
+		
 		<el-table :data="Vipdata" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column prop="id" label="#"  sortable>
 			</el-table-column>
 			<el-table-column prop="n_time" label="开通月份"  sortable>
 			</el-table-column>
-			<el-table-column prop="vc_daymoney" label="星级日均费用"  sortable>
+			<el-table-column prop="vc_daymoney" label="会员日均费用"  sortable>
 			</el-table-column>
 			<el-table-column prop="n_money" label="开通金额"  sortable>
 			</el-table-column>	
-			<el-table-column prop="n_sex" :formatter="formatSex" label="性别"  sortable>
+			<el-table-column prop="n_type" :formatter="formatSex" label="性别"  sortable>
+			</el-table-column>
+			<el-table-column prop="dt_addtime"  width="200"  label="添加时间"  sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="230">
 				<template slot-scope="scope">
@@ -27,6 +28,7 @@
 					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
+			
 		</el-table>
 
 		<!--工具条-->
@@ -39,19 +41,19 @@
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
 			<el-form :model="addForm1" label-width="150px" :rules="addFormRules" ref="editForm">
-				<el-form-item label="星级开通月数" >
-					<el-input v-model="addForm1.n_time" auto-complete="off"></el-input>
+				<el-form-item label="会员开通月数">
+					<el-input v-model="addForm1.n_time" auto-complete="off" ></el-input>
 				</el-form-item>
-				<el-form-item label="日均消费">
-					<el-input v-model="addForm1.vc_daymoney"></el-input>
+				<el-form-item label="日均消费" >
+					<el-input v-model="addForm1.vc_daymoney" ></el-input>
 				</el-form-item>
 				<el-form-item label="性别" >
 					<el-radio-group v-model="addForm1.n_sex">
 						<el-radio v-for="(item,index) in ['男','女']" :key="index" class="radio" :value="index+1" :label="index+1">{{item}}</el-radio>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="星级开通金额" >
-					<el-input v-model="addForm1.n_money"></el-input>
+				<el-form-item label="会员开通金额" >
+					<el-input v-model="addForm1.n_money" ></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -63,7 +65,7 @@
 		<!--新增界面-->
 		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="addForm" label-width="150px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="星级开通月数" prop="n_time">
+				<el-form-item label="会员开通月数" prop="n_time">
 					<el-input v-model="addForm.n_time" auto-complete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="日均消费" prop="vc_daymoney">
@@ -74,7 +76,7 @@
 						<el-radio v-for="(item,index) in ['男','女']" :key="index" class="radio" :value="index+1" :label="index+1">{{item}}</el-radio>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="星级开通金额" prop="n_money">
+				<el-form-item label="会员开通金额" prop="n_money">
 					<el-input v-model="addForm.n_money"></el-input>
 				</el-form-item>
 			</el-form>
@@ -125,16 +127,16 @@
 				addLoading: false,
 				addFormRules: {
 					n_time: [
-						{ required: true, message: '请设置星级月份', trigger: 'blur' }
+						{ required: true, message: '请设置会员月份', trigger: 'blur' }
 					],
 					// n_sex: [
-					// 	{ required: true, message: '请设置星级充值生效的性别', trigger: 'blur' }
+					// 	{ required: true, message: '请设置会员充值生效的性别', trigger: 'blur' }
 					// ],
 					vc_daymoney: [
-						{ required: true, message: '请设置星级日均消费金额', trigger: 'blur' }
+						{ required: true, message: '请设置会员日均消费金额', trigger: 'blur' }
 					],
 					n_money: [
-						{ required: true, message: '请设置星级充值月份对应金额', trigger: 'blur' }
+						{ required: true, message: '请设置会员充值月份对应金额', trigger: 'blur' }
 					]
 					
 				},
@@ -152,6 +154,7 @@
 		methods: {
 			//性别显示转换
 			formatSex: function (row, column) {
+				console.log(column)
 				return row.n_sex == 1 ? '男' : '女' ;
 			},
 			handleCurrentChange(val) {
@@ -175,16 +178,12 @@
 			},
 			getVipList() {
 				//NProgress.start();
-				let para = {
-					type:2
-				}
-				connetAction.ajaxPost(httpUrl['nvIndex'],para)
+				connetAction.ajaxPost(httpUrl['nvIndex'],{type:3})
 				.then((res)=>{
 					console.log(res)
 						//this.editForm = res.data
 						this.Vipdata = res.data;
 						this.listLoading = false;
-						
 				})
 				.catch((res)=>{
 					
@@ -227,7 +226,6 @@
 				this.addForm = {};
 			},
 			//编辑
-			//编辑
 			editSubmit: function () {
 			
 				this.$refs.editForm.validate((valid) => {
@@ -260,17 +258,16 @@
 							this.addLoading = true;
 							//NProgress.start();
 							let para = Object.assign({}, this.addForm);
-							connetAction.ajaxPost(httpUrl['addSetStar'],para)
+							connetAction.ajaxPost(httpUrl['addSetFuwu'],para)
 							.then((res)=>{
-								console.log(res)
+								this.$message({
+									message: res.message,
+									type: 'success'
+								});
 									//this.editForm = res.data
-									this.listLoading = false;
-									this.$message({
-										message: res.message,
-										type: 'success'
-									});
-									this.addFormVisible = false;
-									this.getVipList();
+								this.listLoading = false;
+								this.addFormVisible = false;
+								this.getVipList();
 							})
 							.catch((res)=>{
 								
@@ -282,33 +279,10 @@
 			selsChange: function (sels) {
 				this.sels = sels;
 			},
-			//批量删除
-			batchRemove: function () {
-				var ids = this.sels.map(item => item.id).toString();
-				this.$confirm('确认删除选中记录吗？', '提示', {
-					type: 'warning'
-				}).then(() => {
-					this.listLoading = true;
-					//NProgress.start();
-					let para = { ids: ids };
-					batchRemoveUser(para).then((res) => {
-						this.listLoading = false;
-						//NProgress.done();
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getUsers();
-					});
-				}).catch(() => {
-
-				});
-			},
 			getOther(){
 				getVipConfig('').then((res) => {
 					this.listLoading = false;
 					//NProgress.done();
-					console.log(res,666)
 					this.$message({
 						message: '请求数据成功',
 						type: 'success'
