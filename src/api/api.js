@@ -31,7 +31,8 @@ let APIURlS = {
 	addShopInfo:"Shop/addInfo",			//添加店铺
 	updateShopInfo:"Shop/updateInfo",	//更新店铺
 	delShopAlbum:"Shop/delAlbum",	//删除店铺
-	getWdxx:'Llgz/getWdxx'			//查询信息
+	getWdxx:'Llgz/getWdxx',			//查询信息
+	index:'index/homeInfo',			//详细信息
 	
 	
 }

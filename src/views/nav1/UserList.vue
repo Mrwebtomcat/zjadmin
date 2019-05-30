@@ -264,9 +264,27 @@
 			handleEdit: function (index, row) {
 				this.editFormVisible = true;
 				this.editForm = Object.assign({}, row);
+				this.getuerList(this.editForm.id);
 			},
 			selsChange: function (sels) {
 				this.sels = sels;
+			},
+			getuerList:function(id){
+				
+				let data = {
+					oc_usercode:id
+				}
+				
+				connetAction.ajaxPost(https['index'], data)
+					.then(rd => {
+						if(rd.status==1){
+							this.searchList = rd.data.tjList;
+							console.log(this.searchList)
+						}
+					})
+					.catch(res => {
+						// console.log(res,"res")
+					})
 			},
 			//批量删除
 			batchRemove: function () {

@@ -403,22 +403,15 @@
 			},
 			//编辑
 			editSubmit: function () {
+				//oc_usercode 
+// n_issm           vipid  vc_nosm
 				let param = {
 					oc_usercode:this.editForm.id,
 					n_issm:this.editForm.n_issm,
 					vipid:this.radio2?this.radio2:0,
-					vc_nosm:this.editForm.yuanyin
+					vc_nosm:this.editForm.n_issm?this.editForm.n_issm:''
 				}
-				if(!param.n_issm){
-					if(param.vc_nosm==""){
-						this.$message({message: '请填写不通过原因'});
-						return false;
-					}
-				}else{
-					this.vc_nosm = "";
-					param.vc_nosm = "";
-					param.n_issm = 2;
-				}
+				console.log(param,222)
 				this.$refs.editForm.validate((valid) => {
 					// if (valid) {
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
@@ -485,3 +478,4 @@
 	flex: 0 0 50%;
 }
 </style>
+
