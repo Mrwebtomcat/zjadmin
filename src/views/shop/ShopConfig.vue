@@ -227,7 +227,7 @@
 				}).then(() => {
 					this.listLoading = true;
 					//NProgress.start();
-					let para = { id: row.id,vc_shopimg:row.vc_shopimg};
+					let para = { id: row.id,vc_img:row.vc_shopimg};
 					connetAction.ajaxPost(httpUrl['delShopAlbum'],para)
 					.then((res)=>{
 						console.log(res)

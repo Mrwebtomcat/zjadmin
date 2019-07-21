@@ -17,8 +17,8 @@
 
 		<!--列表-->
 		<el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
-			<el-table-column type="selection" width="55">
-			</el-table-column>
+			<!-- <el-table-column type="selection" width="55">
+			</el-table-column> -->
 			<el-table-column type="index" width="60">
 			</el-table-column>
 			<el-table-column prop="vc_username" label="姓名" width="120" sortable>
@@ -42,7 +42,7 @@
 
 		<!--工具条-->
 		<el-col :span="24" class="toolbar">
-			<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+			<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
 			<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
 			</el-pagination>
 		</el-col>
@@ -57,7 +57,7 @@
 						</el-form-item> 
 						<el-form-item label="性别:"  prop="vc_username">
 							<div>
-								{{editForm.n_sex?'男':'女'}}
+								{{editForm.n_sex==1?'男':'女'}}
 							</div>
 						</el-form-item> 
 					 </div>
@@ -311,10 +311,14 @@
 			},
 			handleCurrentChange(val) {
 				this.page = val;
-				this.getUsers();
+				this.showDSh();
 			},
 			//获取用户列表
-			getUsers() {
+			getUsers:function(){
+				console.log(1)
+			},
+			//获取shenhe列表
+			showDSh() {
 				let para = {
 					page: this.page,
 					// pageNum: this.filters.name
@@ -355,12 +359,12 @@
 					// pageNum: this.filters.name
 					pageNum:20
 				};
+				console.log(this.users,333)
 				this.listLoading = true;
 				//NProgress.start();
 				connetAction.ajaxPost(httpUrl['nvIndex'],{type:1}).then((res) => {
 					this.listLoading = false;
 					this.hylist = res.data;
-					//NProgress.done();
 				});
 			},
 			//删除
@@ -369,7 +373,6 @@
 					type: 'warning'
 				}).then(() => {
 					this.listLoading = true;
-					//NProgress.start();
 					let para = { id: row.id };
 					removeUser(para).then((res) => {
 						this.listLoading = false;
@@ -389,6 +392,8 @@
 				this.editFormVisible = true;
 				this.editForm = Object.assign({}, row);
 				this.adress = this.editForm.vc_province +  this.editForm.vc_city +this.editForm.vc_area
+				var arr = this.hylist.filter((item)=>item.n_sex==this.editForm.n_sex);
+				this.hylist = arr;
 			},
 			//显示新增界面
 			handleAdd: function () {
@@ -407,11 +412,11 @@
 // n_issm           vipid  vc_nosm
 				let param = {
 					oc_usercode:this.editForm.id,
-					n_issm:this.editForm.n_issm,
+					n_issm:this.editForm.n_issm==1?2:this.editForm.n_issm,
 					vipid:this.radio2?this.radio2:0,
-					vc_nosm:this.editForm.n_issm?this.editForm.n_issm:''
+					vc_nosm:this.editForm.yuanyin?this.editForm.yuanyin:''
 				}
-				console.log(param,222)
+				
 				this.$refs.editForm.validate((valid) => {
 					// if (valid) {
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
@@ -425,7 +430,7 @@
 										});
 										this.$refs['editForm'].resetFields();
 										this.editFormVisible = false;
-										this.getUsers();
+										this.showDSh();
 								});
 								
 						});
@@ -452,7 +457,7 @@
 							message: '删除成功',
 							type: 'success'
 						});
-						this.getUsers();
+						this.showDSh();
 					});
 				}).catch(() => {
 
@@ -460,7 +465,7 @@
 			}
 		},
 		created(){
-			this.getUsers();
+			this.showDSh();
 			this.nvIndex()
 		},
 		mounted() {
