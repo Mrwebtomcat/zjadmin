@@ -18,8 +18,8 @@
 
 		<!--列表-->
 		<el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
-			<el-table-column type="selection" width="55">
-			</el-table-column>
+			<!-- <el-table-column type="selection" width="55">
+			</el-table-column> -->
 			<el-table-column type="index" width="60">
 			</el-table-column>
 			<el-table-column prop="vc_username" label="手机号码" width="120" sortable>
@@ -34,18 +34,18 @@
 			</el-table-column>
 			<el-table-column label="信息读取状态操作" width="230">
 				<template slot-scope="scope">
-					<el-button type="primary" size="small" @click="showList(scope.$index, scope.row)">查看</el-button>
+					<!-- <el-button type="primary" size="small" @click="showList(scope.$index, scope.row)">查看</el-button> -->
 					<el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)">确认已读</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
 
 		<!--工具条-->
-		<!-- <el-col :span="24" class="toolbar">
-			<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+		<el-col :span="24" class="toolbar">
+			<!-- <el-button type="danger" @click="batchRemove" :disabled="users.length===0">批量删除</el-button> -->
 			<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
 			</el-pagination>
-		</el-col> -->
+		</el-col>
 
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">

@@ -3,12 +3,12 @@
 		<!--工具条-->
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
-				<el-form-item>
+				<!-- <el-form-item>
 					<el-input v-model="filters.name" placeholder="姓名"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" v-on:click="getUsers">查询</el-button>
-				</el-form-item>
+				</el-form-item> -->
 				<!-- <el-form-item>
 					<el-button type="primary" @click="handleAdd">新增</el-button>
 				</el-form-item> -->
@@ -27,7 +27,11 @@
 			</el-table-column>
 			<el-table-column prop="n_age" label="年龄" width="100" sortable>
 			</el-table-column>
-			<el-table-column prop="birth" label="生日" width="120" sortable>
+			<el-table-column prop="vc_province" label="省份"  sortable>
+			</el-table-column>
+			<el-table-column prop="vc_city" label="城市" sortable>
+			</el-table-column>
+			<el-table-column prop="vc_area" label="地区"  sortable>
 			</el-table-column>
 			<el-table-column prop="n_sfzh" label="身份证号码" min-width="180" sortable>
 			</el-table-column>
@@ -408,17 +412,14 @@
 			},
 			//编辑
 			editSubmit: function () {
-				//oc_usercode 
-// n_issm           vipid  vc_nosm
 				let param = {
 					oc_usercode:this.editForm.id,
 					n_issm:this.editForm.n_issm==1?2:this.editForm.n_issm,
 					vipid:this.radio2?this.radio2:0,
-					vc_nosm:this.editForm.yuanyin?this.editForm.yuanyin:''
+					vc_nosm:this.editForm.vc_nosm?this.editForm.vc_nosm:''
 				}
 				
 				this.$refs.editForm.validate((valid) => {
-					// if (valid) {
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
 							this.addLoading = true;
 							//NProgress.start();
@@ -434,7 +435,6 @@
 								});
 								
 						});
-					// }
 				});
 			},
 			

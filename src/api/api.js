@@ -10,6 +10,11 @@ let APIURlS = {
 	showDsh:"admin_user/showDsh",  //page pageNum 
 	updateSmType:"admin_user/updateSmType",  // 
 	pushMessage:"admin_user/pushMessage",	//添加推送信息
+	pushShopMessage:"admin_user/pushShopMessage",	//店铺信息
+	getShopMessg:"admin_user/getShopMessg",	//获取店铺信息
+	updataShopMessg:"admin_user/updataShopMessg",	//更新店铺信息
+	delShopMsg:"admin_user/delShopMsg",	//删除店铺信息
+	dyShop:"admin_user/dyShop",	//启用店铺
 	updateYzhy:"admin_user/updateYzhy",  // 设置为优质会员 type1   取消 type 0   id 用户
 	// 会员费用信息表
 	//所有会员用户信息
